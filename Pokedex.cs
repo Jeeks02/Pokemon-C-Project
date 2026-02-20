@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 
 namespace Pokemon
 {
@@ -155,41 +156,27 @@ namespace Pokemon
             Console.WriteLine("¡Pokémon actualizado correctamente!");
         }
 
-        static string rutaArchivo = "pokedex.txt";
+        static string rutaArchivo = "pokedex.json";
 
         public static void GuardarEnArchivo()
         {
-            using (StreamWriter sw = new StreamWriter(rutaArchivo))
-            {
-                foreach (var p in pokedexList)
-                {
-                    // Escribimos una línea por cada Pokémon: "1,Pikachu,Eléctrico"
-                    sw.WriteLine($"{p.Id},{p.Nombre},{p.Tipo}");
-                }
-            }
+            // Convertimos la lista completa a una cadena de texto JSON
+            // El "WriteIndented" es para que el archivo se vea bonito (con espacios y saltos)
+            string jsonString = JsonSerializer.Serialize(pokedexList, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(rutaArchivo, jsonString);
         }
 
         public static void CargarDesdeArchivo()
         {
-            if (!File.Exists(rutaArchivo)) return; // Si no hay archivo, no hacemos nada
+            if (!File.Exists(rutaArchivo)) return;
 
-            pokedexList.Clear(); // Limpiamos la lista actual
-            string[] lineas = File.ReadAllLines(rutaArchivo);
+            string jsonString = File.ReadAllText(rutaArchivo);
 
-            foreach (string linea in lineas)
-            {
-                string[] datos = linea.Split(','); // Separamos por la coma
-                if (datos.Length == 3)
-                {
-                    pokedexList.Add(new Pokedex
-                    {
-                        Id = int.Parse(datos[0]),
-                        Nombre = datos[1],
-                        Tipo = datos[2]
-                    });
-                }
-            }
+            // Convertimos el texto de vuelta a nuestra lista
+            pokedexList = JsonSerializer.Deserialize<List<Pokedex>>(jsonString);
         }
+
         public static void BuscarPokemon()
         {
             Console.WriteLine("Ingrese el nombre del Pokémon a buscar:");
