@@ -91,6 +91,69 @@ namespace Pokemon
                 Console.WriteLine($"ID: {pokemon.Id}, Nombre: {pokemon.Nombre}, Tipo: {pokemon.Tipo}");
             }
         }
+        public static void ModificarPokemon()
+        {
+            Console.WriteLine("Ingrese el ID del Pokémon que desea modificar:");
+            string inputId = Console.ReadLine();
+
+            // Validamos el ID igual que en Agregar
+            if (!int.TryParse(inputId, out int idABuscar))
+            {
+                Console.WriteLine("ID inválido. Debe ser un número.");
+                return;
+            }
+
+            // Buscamos si existe en la lista
+            var pokemon = pokedexList.FirstOrDefault(p => p.Id == idABuscar);
+
+            if (pokemon == null)
+            {
+                Console.WriteLine("No se encontró ningún Pokémon con ese ID.");
+                return;
+            }
+
+            Console.WriteLine($"Pokémon encontrado: {pokemon.Nombre} (Tipo: {pokemon.Tipo})");
+
+            // Bucle para el NUEVO NOMBRE
+            while (true)
+            {
+                Console.WriteLine("Ingrese el nuevo nombre (o presione Enter para mantener el actual):");
+                string nuevoNombre = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(nuevoNombre)) break; // Si no escribe nada, no cambia
+
+                if (nuevoNombre.Any(char.IsDigit))
+                {
+                    Console.WriteLine("El nombre no puede tener números.");
+                    continue;
+                }
+
+                pokemon.Nombre = nuevoNombre;
+                break;
+            }
+
+            // Bucle para el NUEVO TIPO
+            while (true)
+            {
+                Console.WriteLine("Ingrese el nuevo tipo (o presione Enter para mantener el actual):");
+                string nuevoTipo = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(nuevoTipo)) break;
+
+                if (nuevoTipo.Any(char.IsDigit))
+                {
+                    Console.WriteLine("El tipo no puede tener números.");
+                    continue;
+                }
+
+                pokemon.Tipo = nuevoTipo;
+                break;
+            }
+
+            // PASO CLAVE: Guardamos los cambios en el archivo
+            GuardarEnArchivo();
+            Console.WriteLine("¡Pokémon actualizado correctamente!");
+        }
 
         static string rutaArchivo = "pokedex.txt";
 

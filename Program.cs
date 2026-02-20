@@ -13,7 +13,8 @@
                 Console.WriteLine("1. Agregar Pokemon");
                 Console.WriteLine("2. Mostrar Pokedex");
                 Console.WriteLine("3. Buscar Pokemon");
-                Console.WriteLine("4. Salir");
+                Console.WriteLine("4. Modificar Pokemon");
+                Console.WriteLine("5. Salir");
 
                 Console.Write("Seleccione una opción: ");
                 string opcion = Console.ReadLine();
@@ -30,6 +31,9 @@
                         Pokedex.BuscarPokemon();
                         break;
                     case "4":
+                        Pokedex.ModificarPokemon();
+                        break;
+                    case "5":
                         Console.WriteLine("¡Hasta luego!");
                         return;
                 }
